@@ -1,11 +1,13 @@
 package com.example.githubmanager.infrastructure;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Component
 public class GitHubService {
 
     private final RestTemplate restTemplate = new RestTemplate();
