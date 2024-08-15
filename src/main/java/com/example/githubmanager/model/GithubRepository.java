@@ -4,6 +4,6 @@ import java.util.List;
 
 public record GithubRepository(String repositoryName,
                                String ownerLogin,
-                               List<Branch> branches,
+                               String url_branches,
                                boolean isFork) {
 }
