@@ -1,6 +1,7 @@
-package com.example.githubmanager.infrastructure;
+package com.example.githubmanager.controller;
 
 
+import com.example.githubmanager.service.GitHubService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ public class GitHubController {
 
     @GetMapping("/repos/{username}")
     public ResponseEntity<List<Object>> getRepositories(@PathVariable String username) {
-        List<Object> repositories = gitHubService.getRepositoriesForUser(username);
+        List<Object> repositories = gitHubService.createListOfRepositories(username);
         return ResponseEntity.ok(repositories);
     }
 }
