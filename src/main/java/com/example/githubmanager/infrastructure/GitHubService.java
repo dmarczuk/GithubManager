@@ -15,6 +15,12 @@ public class GitHubService {
     private static final String GITHUB_API_REPOS_URl = "https://api.github.com/users/{username}/repos";
     private static final String GITHUB_API_BRANCHES_URL = "https://api.github.com/repos/{owner}/{repo}/branches";
 
+    public List<Object> createListOfRepositories(String username) {
+        List<Object> repositoriesForUser = getRepositoriesForUser(username);
+
+        return repositoriesForUser;
+    }
+
     public List<Object> getRepositoriesForUser(String username) {
         String uri = UriComponentsBuilder.fromUriString(GITHUB_API_REPOS_URl)
                 .buildAndExpand(username)

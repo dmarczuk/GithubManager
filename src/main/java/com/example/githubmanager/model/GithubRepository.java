@@ -1,4 +1,9 @@
 package com.example.githubmanager.model;
 
-public class GithubRepository {
+import java.util.List;
+
+public record GithubRepository(String repositoryName,
+                               String ownerLogin,
+                               List<Branch> branches,
+                               boolean isFork) {
 }
