@@ -15,36 +15,38 @@ import java.util.stream.Collectors;
 public class GitHubService {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String GITHUB_API_REPOS_URl = "https://api.github.com/users/{username}/repos";
     private static final String GITHUB_API_BRANCHES_URL = "https://api.github.com/repos/{owner}/{repo}/branches";
 
     public List<GithubRepository> createListOfRepositories(String username) {
-        List<GithubRepository> repositoriesForUser = getRepositoriesForUser(username);
+        String repositoriesForUser = getRepositoriesForUser(username);
+        List<GithubRepository> githubRepositories = GithubRepositoryMapper.githubRepositoriesMapperFromJson(repositoriesForUser);
+//        List<Branch> branches = githubRepositories.stream()
+//                .forEach(repo -> getBranchesForRepo(repo.ownerLogin(), repo.url_branches()));
 
-        return repositoriesForUser;
+//        List<GithubRepository> repositoriesNotFork = repositoriesForUser.stream()
+//                .filter(r -> !r.isFork())
+//                .toList();
+//        List branchesList = repositoriesNotFork
+//                .forEach(r -> getBranchesForRepo(r.ownerLogin(), r.url_branches()));
+
+        return githubRepositories;
     }
 
-    public List<GithubRepository> getRepositoriesForUser(String username) {
+    public String getRepositoriesForUser(String username) {
         String uri = UriComponentsBuilder.fromUriString(GITHUB_API_REPOS_URl)
                 .buildAndExpand(username)
                 .toString();
-        Object[] repositories = restTemplate.getForObject(uri, Object[].class);
+       return restTemplate.getForObject(uri, String.class);
 
-        return Arrays.stream(repositories)
-                .map(GithubRepositoryMapper::mapToGitHubRepository)
-                .collect(Collectors.toList());
     }
 
-    public List<Branch> getBranchesForRepo(String owner, String repo) {
+    public String getBranchesForRepo(String owner, String repo) {
         String uri = UriComponentsBuilder.fromUriString(GITHUB_API_BRANCHES_URL)
                 .buildAndExpand(owner, repo)
                 .toString();
-        Object[] branches = restTemplate.getForObject(uri, Object[].class);
+        return restTemplate.getForObject(uri, String.class);
 
-        return Arrays.stream(branches)
-                .map(object -> objectMapper.convertValue(object, Branch.class))
-                .collect(Collectors.toList());
     }
 }
