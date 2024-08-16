@@ -1,6 +1,7 @@
 package com.example.githubmanager.controller;
 
 
+import com.example.githubmanager.model.GitHubRepositoryResponse;
 import com.example.githubmanager.model.GithubRepository;
 import com.example.githubmanager.service.GitHubService;
 import lombok.AllArgsConstructor;
@@ -19,8 +20,8 @@ public class GitHubController {
     private GitHubService gitHubService;
 
     @GetMapping(value = "/repos/{username}", produces = "application/json")
-    public ResponseEntity<List<GithubRepository>> getRepositories(@RequestHeader(value = "Accept", required = false) @PathVariable String username) {
-        List<GithubRepository> repositories = gitHubService.createListOfRepositories(username);
+    public ResponseEntity<List<GitHubRepositoryResponse>> getRepositories(@RequestHeader(value = "Accept", required = false) @PathVariable String username) {
+        List<GitHubRepositoryResponse> repositories = gitHubService.createListOfRepositories(username);
         return ResponseEntity.ok(repositories);
     }
 }

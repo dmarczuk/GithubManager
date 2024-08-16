@@ -1,5 +1,6 @@
 package com.example.githubmanager.service;
 
+import com.example.githubmanager.model.Branch;
 import com.example.githubmanager.model.GithubRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,16 +8,15 @@ import lombok.Builder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Builder
-public class GithubRepositoryMapper {
+public class JsonMapper {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static List<GithubRepository> githubRepositoriesMapperFromJson(String json) {
+    public static List<GithubRepository> githubRepositoriesMapperFromString(String repositoriesString) {
         List<GithubRepository> githubRepositories = new ArrayList<>();
         try {
-            JsonNode rootNode = objectMapper.readTree(json);
+            JsonNode rootNode = objectMapper.readTree(repositoriesString);
 
             for(JsonNode repoNode: rootNode) {
                 String name = repoNode.path("name").asText();
@@ -28,8 +28,26 @@ public class GithubRepositoryMapper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            // message can read json
+            // message cannot read repositories
         }
         return githubRepositories;
+    }
+
+    public static List<Branch> githubBranchesMapperFromString(String branchesString) {
+        List<Branch> branchList = new ArrayList<>();
+        try {
+            JsonNode rootNode = objectMapper.readTree(branchesString);
+
+            for(JsonNode branchNode: rootNode) {
+                String name = branchNode.path("name").asText();
+                String lastCommitSHA = branchNode.path("commit").path("sha").asText();
+                Branch branch = new Branch(name, lastCommitSHA);
+                branchList.add(branch);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            //message cannot read branches
+        }
+        return branchList;
     }
 }
