@@ -1,15 +1,15 @@
 package com.example.githubmanager.service;
 
+import com.example.githubmanager.exception.UsernameNotFoundException;
 import com.example.githubmanager.model.Branch;
+import com.example.githubmanager.model.GitHubRepositoryResponse;
 import com.example.githubmanager.model.GithubRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class GitHubService {
@@ -19,26 +19,28 @@ public class GitHubService {
     private static final String GITHUB_API_REPOS_URl = "https://api.github.com/users/{username}/repos";
     private static final String GITHUB_API_BRANCHES_URL = "https://api.github.com/repos/{owner}/{repo}/branches";
 
-    public List<GithubRepository> createListOfRepositories(String username) {
+    public List<GitHubRepositoryResponse> createListOfRepositories(String username) {
         String repositoriesForUser = getRepositoriesForUser(username);
-        List<GithubRepository> githubRepositories = GithubRepositoryMapper.githubRepositoriesMapperFromJson(repositoriesForUser);
-//        List<Branch> branches = githubRepositories.stream()
-//                .forEach(repo -> getBranchesForRepo(repo.ownerLogin(), repo.url_branches()));
-
-//        List<GithubRepository> repositoriesNotFork = repositoriesForUser.stream()
-//                .filter(r -> !r.isFork())
-//                .toList();
-//        List branchesList = repositoriesNotFork
-//                .forEach(r -> getBranchesForRepo(r.ownerLogin(), r.url_branches()));
-
-        return githubRepositories;
+        List<GithubRepository> githubRepositories = JsonMapper.githubRepositoriesMapperFromString(repositoriesForUser);
+        List<GitHubRepositoryResponse> gitHubRepositoryResponseList = new ArrayList<>();
+        for(GithubRepository repo: githubRepositories) {
+            String branchesForRepo = getBranchesForRepo(repo.ownerLogin(), repo.repositoryName());
+            List<Branch> branches = JsonMapper.githubBranchesMapperFromString(branchesForRepo);
+            GitHubRepositoryResponse gitHubRepositoryResponse = new GitHubRepositoryResponse(repo.repositoryName(), repo.ownerLogin(), branches);
+            gitHubRepositoryResponseList.add(gitHubRepositoryResponse);
+        }
+        return gitHubRepositoryResponseList;
     }
 
     public String getRepositoriesForUser(String username) {
         String uri = UriComponentsBuilder.fromUriString(GITHUB_API_REPOS_URl)
                 .buildAndExpand(username)
                 .toString();
-       return restTemplate.getForObject(uri, String.class);
+        try {
+            return restTemplate.getForObject(uri, String.class);
+        } catch (Exception e) {
+            throw new UsernameNotFoundException("User with username: " + username + " not found");
+        }
 
     }
 
