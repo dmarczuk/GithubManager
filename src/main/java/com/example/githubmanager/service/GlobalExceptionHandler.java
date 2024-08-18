@@ -1,6 +1,7 @@
 package com.example.githubmanager.service;
 
 import com.example.githubmanager.error.ErrorResponse;
+import com.example.githubmanager.exception.APIRateLimitExceededException;
 import com.example.githubmanager.exception.UsernameNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,5 +16,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException e, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse("${" + HttpStatus.NOT_FOUND.value() + "}", "${"+ e.getMessage() + "}");
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(APIRateLimitExceededException.class)
+    public ResponseEntity<ErrorResponse> handleAPIRateLimitExceededException(APIRateLimitExceededException e, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse("${" + HttpStatus.FORBIDDEN.value() + "}", "${"+ e.getMessage() + "}");
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 }
