@@ -28,7 +28,6 @@ public class JsonMapper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            // message cannot read repositories
         }
         return githubRepositories;
     }
@@ -46,7 +45,6 @@ public class JsonMapper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            //message cannot read branches
         }
         return branchList;
     }
