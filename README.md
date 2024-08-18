@@ -13,12 +13,12 @@ could be implemented in the future.
 ## Usage:
 
 ### Endpoints
-- `GET /api/github/user/{username}/repos` - Fetches all non-forked repositories for a given GitHub username, including branch and last commit details.
+- `GET "/repos/{username}"` - Fetches all non-forked repositories for a given GitHub username, including branch and last commit details.
 
 ### Postman screenshots:
-Screenshot of method GET /api/github/user/dmarczuk/repos which return list of not forked repositories for user dmarczuk
+Screenshot of method GET "/repos/dmarczuk" which return list of not forked repositories for user dmarczuk
 ![ListOfNotForkedRepositories.jpg](ListOfNotForkedRepositories.jpg)
-Screenshot of method GET /api/github/user/dmarczukXXX/repos which return error response, because user not found
+Screenshot of method GET "/repos/dmarczukXXX" which return error response, because user not found
 ![ResponseWhenUserNotFound.jpg](ResponseWhenUserNotFound.jpg)
 ## Technologies used in project
 
@@ -34,18 +34,27 @@ Test: <br>
 <br>
 
 ## Installation and run
+<li>Cloning the Repository</li>
 
-#### Requirements:
+```
+git clone https://github.com/dmarczuk/GithubManager.git
+```
 
+<li>Building the Project</li>
 
+```
+mvn clean install????????????
+```
 
-#### Installation:
+<li>Running the Application</li>
 
-
-#### Configuration:
-
-#### Running the Application:
+```
+mvn spring-boot:run
+```
 
 
 ## In future
+Currently, I am working for unit tests and
+the GitHub authorization by token
+In the future it possible to add some methods
 
