@@ -1,5 +1,6 @@
 package com.example.githubmanager.service;
 
+import com.example.githubmanager.error.ErrorResponse;
 import com.example.githubmanager.exception.UsernameNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
