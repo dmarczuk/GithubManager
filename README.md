@@ -43,7 +43,7 @@ git clone https://github.com/dmarczuk/GithubManager.git
 <li>Building the Project</li>
 
 ```
-mvn clean install????????????
+mvn clean install
 ```
 
 <li>Running the Application</li>
@@ -55,6 +55,6 @@ mvn spring-boot:run
 
 ## In future
 Currently, I am working for unit tests and
-the GitHub authorization by token
-In the future it possible to add some methods
+the GitHub authorization by token. </br>
+In the future it possible to add some other methods
 
