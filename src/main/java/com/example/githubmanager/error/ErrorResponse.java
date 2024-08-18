@@ -1,4 +1,4 @@
-package com.example.githubmanager.service;
+package com.example.githubmanager.error;
 
 public class ErrorResponse {
     private String status;

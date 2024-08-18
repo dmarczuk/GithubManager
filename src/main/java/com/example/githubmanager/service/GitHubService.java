@@ -2,7 +2,7 @@ package com.example.githubmanager.service;
 
 import com.example.githubmanager.exception.UsernameNotFoundException;
 import com.example.githubmanager.model.Branch;
-import com.example.githubmanager.model.GitHubRepositoryResponse;
+import com.example.githubmanager.model.GitHubRepositoryDto;
 import com.example.githubmanager.model.GithubRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -19,14 +19,14 @@ public class GitHubService {
     private static final String GITHUB_API_REPOS_URl = "https://api.github.com/users/{username}/repos";
     private static final String GITHUB_API_BRANCHES_URL = "https://api.github.com/repos/{owner}/{repo}/branches";
 
-    public List<GitHubRepositoryResponse> createListOfRepositories(String username) {
+    public List<GitHubRepositoryDto> createListOfRepositories(String username) {
         String repositoriesForUser = getRepositoriesForUser(username);
         List<GithubRepository> githubRepositories = JsonMapper.githubRepositoriesMapperFromString(repositoriesForUser);
-        List<GitHubRepositoryResponse> gitHubRepositoryResponseList = new ArrayList<>();
+        List<GitHubRepositoryDto> gitHubRepositoryResponseList = new ArrayList<>();
         for(GithubRepository repo: githubRepositories) {
             String branchesForRepo = getBranchesForRepo(repo.ownerLogin(), repo.repositoryName());
             List<Branch> branches = JsonMapper.githubBranchesMapperFromString(branchesForRepo);
-            GitHubRepositoryResponse gitHubRepositoryResponse = new GitHubRepositoryResponse(repo.repositoryName(), repo.ownerLogin(), branches);
+            GitHubRepositoryDto gitHubRepositoryResponse = new GitHubRepositoryDto(repo.repositoryName(), repo.ownerLogin(), branches);
             gitHubRepositoryResponseList.add(gitHubRepositoryResponse);
         }
         return gitHubRepositoryResponseList;
@@ -44,7 +44,7 @@ public class GitHubService {
 
     }
 
-    public String getBranchesForRepo(String owner, String repo) {
+    private String getBranchesForRepo(String owner, String repo) {
         String uri = UriComponentsBuilder.fromUriString(GITHUB_API_BRANCHES_URL)
                 .buildAndExpand(owner, repo)
                 .toString();
