@@ -1,10 +1,12 @@
 package com.example.githubmanager.service;
 
+import com.example.githubmanager.exception.APIRateLimitExceededException;
 import com.example.githubmanager.exception.UsernameNotFoundException;
 import com.example.githubmanager.model.Branch;
 import com.example.githubmanager.model.GitHubRepositoryDto;
 import com.example.githubmanager.model.GithubRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -38,10 +40,11 @@ public class GitHubService {
                 .toString();
         try {
             return restTemplate.getForObject(uri, String.class);
+        } catch (HttpClientErrorException e) {
+            throw new APIRateLimitExceededException("Your API rate limit exceeded, you should add your token to header");
         } catch (Exception e) {
             throw new UsernameNotFoundException("User with username: " + username + " not found");
         }
-
     }
 
     private String getBranchesForRepo(String owner, String repo) {
